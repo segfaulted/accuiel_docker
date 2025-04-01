@@ -44,10 +44,10 @@ WHERE pg_stat_activity.datname = 'statistics'
 CREATE DATABASE statistics_old WITH OWNER = postgres TEMPLATE = statistics ENCODING = 'UTF8' LOCALE_PROVIDER = 'libc' CONNECTION
 LIMIT = -1 IS_TEMPLATE = False;
 
-
 CREATE ROLE statistics_old WITH LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT NOREPLICATION NOBYPASSRLS CONNECTION
 LIMIT -1 PASSWORD 'stat0807stat';
 
+\c statistics_old
 GRANT EXECUTE ON FUNCTION public.armor(bytea) TO statistics_old;
 
 GRANT EXECUTE ON FUNCTION public.armor(bytea, text[], text[]) TO statistics_old;
@@ -217,16 +217,16 @@ GRANT
 SELECT, TRIGGER ON TABLE public.auth_permission TO statistics_old;
 
 GRANT
-SELECT, TRIGGER ON TABLE public.auth_user TO statistics_old;
+ALL ON TABLE public.auth_user TO statistics_old;
 
 GRANT
-SELECT, TRIGGER ON TABLE public.auth_user_groups TO statistics_old;
+ALL ON TABLE public.auth_user_groups TO statistics_old;
 
 GRANT
 SELECT, TRIGGER ON TABLE public.auth_user_user_permissions TO statistics_old;
 
 GRANT
-SELECT, TRIGGER ON TABLE public.base_auditlog TO statistics_old;
+ALL ON TABLE public.base_auditlog TO statistics_old;
 
 GRANT
 SELECT, TRIGGER ON TABLE public.django_admin_log TO statistics_old;

@@ -99,9 +99,9 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: postgres
     volumes:
-      - pgdata3:/var/lib/postgresql/data
+      - pgdata:/var/lib/postgresql/data
       - ./docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
     restart: always
 
 volumes:
-  pgdata3:
+  pgdata:
