@@ -1,0 +1,11 @@
+[submodule "statistics_old"]
+	path = statistics_old
+	url = git@gitlab.com:segfaulted/statistics.git
+	branch = old
+[submodule "statistics"]
+	path = statistics
+	url = git@gitlab.com:segfaulted/statistics.git
+	branch = update
+[submodule "interpreter"]
+	path = interpreter
+	url = https://github.com/segfaulted/ACCUEIL-Interpreter.git

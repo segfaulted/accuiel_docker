@@ -3,3 +3,4 @@ static
 private.key
 public.key
 docker-entrypoint-initdb.d/*
+*.sql

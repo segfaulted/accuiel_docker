@@ -1,75 +1,8 @@
 name: accueil
 services:
-  nginx:
-    image: nginx:latest
-    container_name: nginx
+  db2:
     ports:
-      - 8000:80
-    volumes:
-      - ./nginx/accueil.conf:/etc/nginx/conf.d/accueil.conf
-      - ./static:/static
-      - ./certbot/www/:/var/www/certbot/:ro
-    restart: always
-  db:
-    build:
-      context: ./postgres
-      dockerfile: Dockerfile
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-    container_name: db
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: postgres
-    ports:
-      - "5432:5432"
-    volumes:
-      - ./docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
-    restart: always
-  interpreter:
-    depends_on:
-      db:
-        condition: service_healthy
-    build:
-      context: ../interpreter
-      dockerfile: ./docker/Dockerfile
-    container_name: interpreter
-    networks:
-      - default
-    volumes:
-      - ./public.key:/project/src/public.key
-      - ./private.key:/project/src/private.key
-      - ./static/interpreter:/project/src/static
-    environment:
-      - SECRET_KEY=asdfasdf
-      - DATABASE_PASS=postgres
-      - DATABASE_USER=postgres
-      - DATABASE_NAME=interpreter
-      - DATABASE_HOST=db
-      - DEPLOY_DEV=True
-      - URL_PREFIX=/i
-    restart: always
-  statistics:
-    depends_on:
-      db:
-        condition: service_healthy
-    build:
-      context: ../statistics
-      dockerfile: ./docker/Dockerfile
-    container_name: statistics
-    environment:
-      - SECRET_KEY=asdfasdf
-      - DATABASE_PASS=postgres
-      - DATABASE_USER=postgres
-      - DATABASE_NAME=statistics
-      - DATABASE_HOST=db
-    volumes:
-      - ./public.key:/project/public.key
-      - ./private.key:/project/private.key
-      - ./static/statistics:/project/static
-    restart: always
+      - "15432:5432"
+  
 
     

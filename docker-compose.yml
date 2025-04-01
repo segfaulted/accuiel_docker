@@ -1,0 +1,107 @@
+name: accueil
+services:
+  certbot:
+    image: certbot/certbot:latest
+    volumes:
+      - ./certbot/www/:/var/www/certbot/:rw
+      - ./certbot/conf/:/etc/letsencrypt/:rw
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./nginx/accueil.conf:/etc/nginx/conf.d/accueil.conf
+      - ./static:/static
+      - ./certbot/conf/:/etc/nginx/ssl/
+      - ./certbot/www/:/var/www/certbot/:ro
+    restart: always
+  interpreter:
+    depends_on:
+      db2:
+        condition: service_healthy
+    build:
+      context: ./interpreter
+      dockerfile: ./docker/Dockerfile
+    container_name: interpreter
+    networks:
+      - default
+    volumes:
+      - ./public.key:/project/src/public.key
+      - ./private.key:/project/src/private.key
+      - ./static/interpreter:/project/src/static
+    environment:
+      - SECRET_KEY=p%2BmLzKp%5BcC-QN%297sKnOu%3COSp%20%5D%3BLfA515n.5wHzEz1wu%21T0h%2B%2Au%23an7oTs%21_j
+      - DATABASE_PASS=int0807int
+      - DATABASE_USER=interpreter
+      - DATABASE_NAME=interpreter
+      - DATABASE_HOST=db2
+      - DEPLOY_DEV=False
+      - URL_PREFIX=/interpreter
+      - PGCRYPTO_KEY=notused
+      - BACKUP_STORAGE_LOCATION=/backup
+    restart: always
+  statistics:
+    depends_on:
+      db2:
+        condition: service_healthy
+    build:
+      context: ./statistics
+      dockerfile: ./docker/Dockerfile
+    container_name: statistics
+    environment:
+      - SECRET_KEY=p+mLzKp[cC-QN)7sKnOu<OSp ];LfA515n.5wHzEz1wu!T0h+*u#an7oTs!_j
+      - DATABASE_PASS=stat0807stat
+      - DATABASE_USER=statistics
+      - DATABASE_NAME=statistics
+      - DATABASE_HOST=db2
+      - PGCRYPTO_KEY=notused
+    volumes:
+      - ./public.key:/project/src/public.key
+      - ./private.key:/project/src/private.key
+      - ./static/statistics:/project/src/static
+    restart: always
+  statistics_old:
+    depends_on:
+      db2:
+        condition: service_healthy
+    build:
+      context: ./statistics_old
+      dockerfile: ./docker/Dockerfile
+    container_name: statistics_old
+    environment:
+      - SECRET_KEY=p+mLzKp[cC-QN)7sKnOu<OSp ];LfA515n.5wHzEz1wu!T0h+*u#an7oTs!_j
+      - DATABASE_PASS=stat0807stat
+      - DATABASE_USER=statistics_old
+      - DATABASE_NAME=statistics_old
+      - DATABASE_HOST=db2
+      - PGCRYPTO_KEY=notused
+      - URL_PREFIX=/statistics_old
+    volumes:
+      - ./public.key:/project/public.key
+      - ./private.key:/project/private.key
+      - ./static/statistics_old:/project/static
+    restart: always
+
+  db2:
+    build:
+      context: ./postgres
+      dockerfile: Dockerfile
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    container_name: db2
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    volumes:
+      - pgdata3:/var/lib/postgresql/data
+      - ./docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+    restart: always
+
+volumes:
+  pgdata3:
