@@ -8,4 +8,4 @@
 	branch = update
 [submodule "interpreter"]
 	path = interpreter
-	url = https://github.com/segfaulted/ACCUEIL-Interpreter.git
+	url = git@github.com:segfaulted/ACCUEIL-Interpreter.git
