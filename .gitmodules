@@ -9,3 +9,4 @@
 [submodule "interpreter"]
 	path = interpreter
 	url = git@github.com:segfaulted/ACCUEIL-Interpreter.git
+	branch = master
