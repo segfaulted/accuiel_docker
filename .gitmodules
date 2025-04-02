@@ -5,7 +5,7 @@
 [submodule "statistics"]
 	path = statistics
 	url = git@gitlab.com:segfaulted/statistics.git
-	branch = update
+	branch = master
 [submodule "interpreter"]
 	path = interpreter
 	url = git@github.com:segfaulted/ACCUEIL-Interpreter.git
